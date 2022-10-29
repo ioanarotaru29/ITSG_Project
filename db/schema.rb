@@ -10,7 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_29_081009) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_29_100024) do
+  create_table "food_to_meals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "meal_id", null: false
+    t.bigint "food_id", null: false
+    t.decimal "serving_size", precision: 10, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["food_id"], name: "index_food_to_meals_on_food_id"
+    t.index ["meal_id"], name: "index_food_to_meals_on_meal_id"
+  end
+
+  create_table "foods", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.decimal "calories", precision: 10
+    t.decimal "carbs", precision: 10
+    t.decimal "fat", precision: 10
+    t.decimal "protein", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "meals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "category"
+    t.date "served_on"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_meals_on_user_id"
+  end
+
   create_table "oauth_access_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "resource_owner_id"
     t.bigint "application_id", null: false
@@ -57,5 +86,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_081009) do
     t.index ["first_name", "last_name"], name: "index_users_on_first_name_and_last_name", unique: true
   end
 
+  add_foreign_key "food_to_meals", "foods"
+  add_foreign_key "food_to_meals", "meals"
+  add_foreign_key "meals", "users"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
 end

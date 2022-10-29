@@ -16,6 +16,8 @@ class User < ApplicationRecord
   validates :weight, numericality: true, allow_blank: true
   validates :date_of_birth, timeliness: { on_or_before: lambda { Date.current }, type: :date }, allow_blank: true
 
+  has_many :meals
+
   # the authenticate method from devise documentation
   def self.authenticate(email, password)
     user = User.find_for_authentication(email: email)
