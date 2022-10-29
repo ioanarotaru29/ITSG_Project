@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   def create
     user = User.new(user_params)
     client_app = Doorkeeper::Application.find_by(uid: params[:client_id])
-    return render(json: { error: 'Invalid client ID'}, status: 403) unless client_app
+    return render json: { error: 'Invalid client ID'}, status: 403 unless client_app
 
     if user.save
       # create access token for the user, so the user won't need to login again after registration
@@ -32,8 +32,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def update
+    return render json: { error: "Current user not found" }, status: 404 unless current_user
+    if current_user.update(user_params)
+      current_user.compute_amr
+      render json: current_user.as_json
+    else
+      render json: { error: current_user.errors.full_messages }, status: 422
+    end
+  end
+
   private
   def user_params
-    params.permit(:email, :password, :password_confirmation)
+    params.permit(:email, :password, :password_confirmation, :first_name, :last_name,
+                  :date_of_birth, :gender, :height, :weight, :activity_type)
   end
 end

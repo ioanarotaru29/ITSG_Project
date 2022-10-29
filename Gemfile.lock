@@ -157,9 +157,12 @@ GEM
       actionpack (>= 5.0)
       railties (>= 5.0)
     thor (1.2.1)
+    timeliness (0.4.4)
     timeout (0.3.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
+    validates_timeliness (5.0.0)
+      timeliness (>= 0.3.10, < 1)
     warden (1.2.9)
       rack (>= 2.0.9)
     websocket-driver (0.7.5)
@@ -180,6 +183,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 7.0.4)
   tzinfo-data
+  validates_timeliness
 
 RUBY VERSION
    ruby 2.7.6p219

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_28_214421) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_29_081009) do
   create_table "oauth_access_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "resource_owner_id"
     t.bigint "application_id", null: false
@@ -45,7 +45,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_28_214421) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.string "gender", default: "M"
+    t.string "activity_type", default: "active"
+    t.decimal "height", precision: 10
+    t.decimal "weight", precision: 10
+    t.date "date_of_birth"
+    t.decimal "active_metabolic_rate", precision: 10
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["first_name", "last_name"], name: "index_users_on_first_name_and_last_name", unique: true
   end
 
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
