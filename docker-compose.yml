@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+  app:
+    depends_on:
+      - "db"
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      DB_DATABASE: FoodRecognitionMainAPI
+      DB_PORT: 3306
+      DB_HOST: db
+    volumes:
+      - ".:/app"
+      - "./config/docker/database.yml:/app/config/database.yml"
+volumes:
+  db:
