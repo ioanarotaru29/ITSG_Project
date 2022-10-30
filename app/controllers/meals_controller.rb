@@ -41,7 +41,13 @@ class MealsController < ApplicationController
     @meal = current_user.meals.build(meal_params)
 
     if @meal.save
-      render json: @meal, status: :ok, location: @meal
+      render json: {
+        id: @meal.id,
+        category: @meal.category,
+        served_on: @meal.served_on,
+        foods: @meal.foods_with_nutritional_values,
+        calories: @meal.total_calories
+      }, status: :ok, location: @meal
     else
       render json: @meal.errors.full_messages, status: :unprocessable_entity
     end
@@ -50,7 +56,13 @@ class MealsController < ApplicationController
   # PATCH/PUT /meals/1
   def update
     if @meal.update(meal_params)
-      render json: @meal
+      render json: {
+        id: @meal.id,
+        category: @meal.category,
+        served_on: @meal.served_on,
+        foods: @meal.foods_with_nutritional_values,
+        calories: @meal.total_calories
+      }
     else
       render json: @meal.errors, status: :unprocessable_entity
     end
@@ -69,6 +81,6 @@ class MealsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def meal_params
-      params.permit(:category, :served_on)
+      params.permit(:category, :served_on, food_to_meals_attributes: [:id, :food_id, :serving_size, :_destroy])
     end
 end

@@ -3,6 +3,7 @@ class Meal < ApplicationRecord
 
   has_many :food_to_meals
   has_many :foods, through: :food_to_meals
+  accepts_nested_attributes_for :food_to_meals, allow_destroy: true
 
   validates :category, inclusion: { in: %w[breakfast lunch dinner snack] }
   validates :served_on, timeliness: { on_or_before: lambda { Date.current }, type: :date }
@@ -13,7 +14,7 @@ class Meal < ApplicationRecord
     food_to_meals.map do |fm|
       factor = fm.serving_size / 100
       {
-        id: fm.food.id,
+        id: fm.id,
         name: fm.food.name,
         calories: (fm.food.calories * factor).round(2),
         fat: (fm.food.fat * factor).round(2),
