@@ -3,7 +3,11 @@ class MealsController < ApplicationController
 
   # GET /meals
   def index
-    @meals = Meal.all
+    if params[:date].present?
+      @meals = current_user.meals.on_date(params[:date])
+    else
+      @meals = current_user.meals
+    end
 
     render json: @meals
   end
@@ -15,12 +19,12 @@ class MealsController < ApplicationController
 
   # POST /meals
   def create
-    @meal = Meal.new(meal_params)
+    @meal = current_user.meals.build(meal_params)
 
     if @meal.save
-      render json: @meal, status: :created, location: @meal
+      render json: @meal, status: :ok, location: @meal
     else
-      render json: @meal.errors, status: :unprocessable_entity
+      render json: @meal.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -46,6 +50,6 @@ class MealsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def meal_params
-      params.require(:meal).permit(:category, :served_on, :user_id)
+      params.permit(:category, :served_on)
     end
 end

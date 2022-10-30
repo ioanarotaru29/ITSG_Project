@@ -7,4 +7,5 @@ class Meal < ApplicationRecord
   validates :category, inclusion: { in: %w[breakfast lunch dinner snack] }
   validates :served_on, timeliness: { on_or_before: lambda { Date.current }, type: :date }
 
+  scope :on_date, -> (date) { where(served_on: date) }
 end
