@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_29_100024) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_30_112835) do
   create_table "food_to_meals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "meal_id", null: false
     t.bigint "food_id", null: false
@@ -23,12 +23,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_100024) do
 
   create_table "foods", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.decimal "calories", precision: 10
-    t.decimal "carbs", precision: 10
-    t.decimal "fat", precision: 10
-    t.decimal "protein", precision: 10
+    t.float "calories"
+    t.float "carbs"
+    t.float "fat"
+    t.float "protein"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "category"
   end
 
   create_table "meals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -78,10 +79,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_100024) do
     t.string "last_name"
     t.string "gender", default: "M"
     t.string "activity_type", default: "active"
-    t.decimal "height", precision: 10
-    t.decimal "weight", precision: 10
+    t.float "height"
+    t.float "weight"
     t.date "date_of_birth"
-    t.decimal "active_metabolic_rate", precision: 10
+    t.float "active_metabolic_rate"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["first_name", "last_name"], name: "index_users_on_first_name_and_last_name", unique: true
   end
