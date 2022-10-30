@@ -8,13 +8,32 @@ class MealsController < ApplicationController
     else
       @meals = current_user.meals
     end
+    response_data = []
+    @meals.each do |meal|
+      meal_hash = {
+        id: meal.id,
+        category: meal.category,
+        served_on: meal.served_on,
+        foods: meal.foods_with_nutritional_values,
+        calories: meal.total_calories
+      }
+      response_data << meal_hash
+    end
 
-    render json: @meals
+    render json: response_data
   end
 
   # GET /meals/1
   def show
-    render json: @meal
+    response_data = {
+      id: @meal.id,
+      category: @meal.category,
+      served_on: @meal.served_on,
+      foods: @meal.foods_with_nutritional_values,
+      calories: @meal.total_calories
+    }
+
+    render json: response_data
   end
 
   # POST /meals

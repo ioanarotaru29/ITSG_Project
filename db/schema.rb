@@ -14,7 +14,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_30_112835) do
   create_table "food_to_meals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "meal_id", null: false
     t.bigint "food_id", null: false
-    t.decimal "serving_size", precision: 10, null: false
+    t.float "serving_size", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["food_id"], name: "index_food_to_meals_on_food_id"
