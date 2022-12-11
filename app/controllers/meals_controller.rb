@@ -1,7 +1,7 @@
 class MealsController < ApplicationController
   include HTTParty
 
-  BASE_AI_URL = 'http://localhost:5000/predict'
+  BASE_AI_URL = 'http://127.0.0.1:5000/predict'
   before_action :set_meal, only: %i[ show update destroy ]
 
   # GET /meals
@@ -19,7 +19,7 @@ class MealsController < ApplicationController
         served_on: meal.served_on,
         foods: meal.foods_with_nutritional_values,
         calories: meal.total_calories,
-        photo: meal.photo&.url || ""
+        pathImage: meal.photo&.url || ""
       }
       response_data << meal_hash
     end
@@ -34,7 +34,8 @@ class MealsController < ApplicationController
       category: @meal.category,
       served_on: @meal.served_on,
       foods: @meal.foods_with_nutritional_values,
-      calories: @meal.total_calories
+      calories: @meal.total_calories,
+      pathImage: @meal.photo.url || ""
     }
 
     render json: response_data
@@ -42,18 +43,30 @@ class MealsController < ApplicationController
 
   # POST /meals
   def create
-    binding.pry
     @meal = current_user.meals.build(meal_params)
     if @meal.save
-      # binding.pry
-      # response = HTTParty.post(BASE_AI_URL, body: {url: @meal.photo.url}.to_json, headers: { 'Content-Type' => 'application/json' }) if @meal.photo.present?
+      response = HTTParty.post(BASE_AI_URL, body: {key: @meal.photo.key}.to_json, headers: { 'Content-Type' => 'application/json' }) if @meal.photo.present?
+      detected_food = response.try(:[], "detected_object")
+
+      if detected_food.present?
+        food = Food.find_by(name: detected_food)
+        food ||= Food.where('name like ?', "%#{detected_food}%").first
+        food ||= Food.create(name: detected_food,
+                             calories: rand(0..300.0),
+                             carbs: rand(0..300.0),
+                             protein: rand(0..300.0),
+                             fat:  rand(0..300.0)
+                             )
+        @meal.food_to_meals.create(food: food, serving_size: 100)
+      end
+
       render json: {
         id: @meal.id,
         category: @meal.category,
         served_on: @meal.served_on,
         foods: @meal.foods_with_nutritional_values,
         calories: @meal.total_calories,
-        photo: @meal.photo.url || ""
+        pathImage: @meal.photo.url || ""
       }, status: :ok, location: @meal
     else
       render json: @meal.errors.full_messages, status: :unprocessable_entity
@@ -69,7 +82,7 @@ class MealsController < ApplicationController
         served_on: @meal.served_on,
         foods: @meal.foods_with_nutritional_values,
         calories: @meal.total_calories,
-        photo: @meal.photo.url || ""
+        pathImage: @meal.photo.url || ""
       }
     else
       render json: @meal.errors, status: :unprocessable_entity
