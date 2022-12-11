@@ -10,8 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_30_102250) do
-  create_table "food_to_meals", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2022_12_11_155800) do
+  create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "food_to_meals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "meal_id", null: false
     t.bigint "food_id", null: false
     t.float "serving_size", null: false
@@ -21,7 +49,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_30_102250) do
     t.index ["meal_id"], name: "index_food_to_meals_on_meal_id"
   end
 
-  create_table "foods", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+  create_table "foods", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.float "calories"
     t.float "carbs"
@@ -32,7 +60,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_30_102250) do
     t.string "category"
   end
 
-  create_table "meals", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+  create_table "meals", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "category"
     t.date "served_on"
     t.bigint "user_id", null: false
@@ -41,7 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_30_102250) do
     t.index ["user_id"], name: "index_meals_on_user_id"
   end
 
-  create_table "oauth_access_tokens", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+  create_table "oauth_access_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "resource_owner_id"
     t.bigint "application_id", null: false
     t.string "token", null: false
@@ -57,7 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_30_102250) do
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
   end
 
-  create_table "oauth_applications", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+  create_table "oauth_applications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "uid", null: false
     t.string "secret", null: false
@@ -69,7 +97,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_30_102250) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.datetime "remember_created_at"
@@ -87,6 +115,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_30_102250) do
     t.index ["first_name", "last_name"], name: "index_users_on_first_name_and_last_name", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "food_to_meals", "foods"
   add_foreign_key "food_to_meals", "meals"
   add_foreign_key "meals", "users"
