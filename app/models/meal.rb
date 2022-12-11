@@ -15,6 +15,7 @@ class Meal < ApplicationRecord
       factor = fm.serving_size / 100
       {
         id: fm.id,
+        food_id: fm.food.id,
         name: fm.food.name,
         calories: (fm.food.calories * factor).round(2),
         fat: (fm.food.fat * factor).round(2),
