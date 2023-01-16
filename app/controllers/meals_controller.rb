@@ -12,7 +12,7 @@ class MealsController < ApplicationController
       @meals = current_user.meals
     end
     response_data = []
-    @meals.each do |meal|
+    @meals.sort_by(&:created_at).reverse.each do |meal|
       meal_hash = {
         id: meal.id,
         category: meal.category,
